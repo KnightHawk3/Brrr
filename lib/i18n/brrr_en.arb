@@ -1,0 +1,22 @@
+{
+  "title": "BrrR",
+  "@title": {
+    "description": "Title for the BrrR application",
+    "type": "text",
+    "placeholders": {}
+  },
+
+  "fermenting": "FERMENTING",
+  "@fermenting": {
+    "description": "Label for the Fermenting tab",
+    "type": "text",
+    "placeholders": {}
+  },
+
+  "finished": "FINISHED",
+  "@portfolio": {
+    "description": "Label for the Finished tab",
+    "type": "text",
+    "placeholders": {}
+  }
+}

@@ -1,0 +1,15 @@
+name: brrr
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: '>=0.14.0 <0.15.0'
+  intl_translation: '>=0.14.0 <0.15.0'
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
