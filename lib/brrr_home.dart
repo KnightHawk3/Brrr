@@ -237,7 +237,7 @@ class BrrrHomeState extends State<BrrrHome> {
   Iterable<Brew> _filterBySearchQuery(Iterable<Brew> brews) {
     if (_searchQuery.text.isEmpty) return brews;
     final RegExp regexp = new RegExp(_searchQuery.text, caseSensitive: false);
-    return brews.where((Brew brew) => brew.icon.contains(regexp));
+    return brews.where((Brew brew) => brew.shortName().contains(regexp));
   }
 
   Widget _buildBrewList(
@@ -245,7 +245,7 @@ class BrrrHomeState extends State<BrrrHome> {
     return new BrewList(
       brews: brews.toList(),
       onOpen: (Brew brew) {
-        Navigator.pushNamed(context, '/brew/${brew.icon}');
+        Navigator.pushNamed(context, '/brew/${brew.shortName()}');
       },
       onShow: (Brew brew) {
         _scaffoldKey.currentState.showBottomSheet<Null>(
@@ -292,19 +292,12 @@ class BrrrHomeState extends State<BrrrHome> {
     );
   }
 
-  void _handleCreateCompany() {
-    showModalBottomSheet<Null>(
-      context: context,
-      builder: (BuildContext context) => new _CreateCompanySheet(),
-    );
-  }
-
   Widget buildFloatingActionButton() {
     return new FloatingActionButton(
       tooltip: 'Create company',
       child: const Icon(Icons.add),
       backgroundColor: Colors.redAccent,
-      onPressed: _handleCreateCompany,
+      onPressed: () {Navigator.pushNamed(context, '/new');},
     );
   }
 
@@ -328,19 +321,3 @@ class BrrrHomeState extends State<BrrrHome> {
   }
 }
 
-class _CreateCompanySheet extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO(ianh): Fill this out.
-    return new Column(
-      children: <Widget>[
-        const TextField(
-          autofocus: true,
-          decoration: const InputDecoration(
-            hintText: 'Company Name',
-          ),
-        ),
-      ],
-    );
-  }
-}

@@ -19,6 +19,8 @@ import 'brrr_settings.dart';
 import 'brrr_strings.dart';
 import 'brew_detail.dart';
 import 'brrr_types.dart';
+import 'brew_create.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BrrrApp extends StatefulWidget {
   @override
@@ -26,11 +28,23 @@ class BrrrApp extends StatefulWidget {
 }
 
 class BrrrAppState extends State<BrrrApp> {
-  final Map<String, Brew> _brews = <String, Brew>{};
-  final List<String> _icons = <String>[];
+  Map<String, Brew> _brews = <String, Brew>{};
+  List<String> _urls = <String>[];
+
+  void brewUpdater(Brew brew) {
+    SharedPreferences.getInstance().then(
+            (SharedPreferences prefs) {
+              prefs.setString("brews", BrrrData.serialise(_brews));
+            });
+    setState(() {
+      _brews[brew.shortName()] = brew;
+      _urls.add(brew.shortName());
+      _urls.sort();
+    });
+  }
 
   BrrrConfiguration _configuration = new BrrrConfiguration(
-      brrrMode: BrrrMode.optimistic,
+      brrrMode: BrrrMode.pessimistic,
       backupMode: BackupMode.enabled,
       debugShowGrid: false,
       debugShowSizes: false,
@@ -46,7 +60,7 @@ class BrrrAppState extends State<BrrrApp> {
     super.initState();
     new BrrrDataFetcher((BrrrData data) {
       setState(() {
-        data.appendTo(_brews, _icons);
+        data.appendTo(_brews, _urls);
       });
     });
   }
@@ -110,9 +124,11 @@ class BrrrAppState extends State<BrrrApp> {
         showSemanticsDebugger: _configuration.showSemanticsDebugger,
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => new BrrrHome(
-              _brews, _icons, _configuration, configurationUpdater),
+              _brews, _urls, _configuration, configurationUpdater),
           '/settings': (BuildContext context) =>
-              new BrrrSettings(_configuration, configurationUpdater)
+              new BrrrSettings(_configuration, configurationUpdater),
+          '/new': (BuildContext context) =>
+              new BrewCreateScreen(_configuration, configurationUpdater, brewUpdater),
         },
         onGenerateRoute: _getRoute,
         onLocaleChanged: _onLocaleChanged);

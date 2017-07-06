@@ -21,8 +21,12 @@ class BrewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String changeInPrice = "${brew.gravityDiff().toStringAsFixed(2)}";
-    if (brew.gravityDiff() > 10) changeInPrice = "+" + changeInPrice;
+    String abv = "";
+    if (brew.originalGravity != null) {
+       abv =
+          "${(((brew.originalGravity / 1000.0) - (brew.finalGravity / 1000.0)
+      ) * 131.25).toStringAsFixed(2)}%";
+    }
     return new InkWell(
         onTap: _getHandler(onPressed),
         onDoubleTap: _getHandler(onDoubleTap),
@@ -38,19 +42,14 @@ class BrewRow extends StatelessWidget {
                   margin: const EdgeInsets.only(right: 5.0),
                   child: new Hero(
                       tag: brew,
-                      child: new CircleAvatar(
-                          child: new Text(brew.name[0])
-                      )
-                  )
-              ),
+                      child: new CircleAvatar(child: new Text(brew.name[0])))),
               new Expanded(
                   child: new Row(
                       children: <Widget>[
                     new Expanded(
                         child: new Text(brew.name, textAlign: TextAlign.right)),
                     new Expanded(
-                        child: new Text(changeInPrice,
-                            textAlign: TextAlign.right)),
+                        child: new Text(abv, textAlign: TextAlign.right)),
                   ],
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline:
